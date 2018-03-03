@@ -15,7 +15,7 @@
 #CXX = clang++
 
 EXE = stripR
-SOURCES = main.cpp imgui_impl_glfw_gl3.cpp
+SOURCES = stripR.cpp main.cpp imgui_impl_glfw_gl3.cpp
 SOURCES += imgui/imgui.cpp imgui/imgui_demo.cpp imgui/imgui_draw.cpp
 SOURCES += imgui/examples/libs/gl3w/GL/gl3w.c
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
