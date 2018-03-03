@@ -29,7 +29,9 @@ struct StripRTrace {
     char mOnceConnected;
     evid mEvId;
     bool mNewName;
-    double mLastValue;
+    float mLastValue;
+    float mValues[100];
+    int mValuesIndex;
 
     StripRTrace();
     ~StripRTrace();

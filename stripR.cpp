@@ -100,6 +100,15 @@ void StripR::Draw(const char* title, bool* p_open) {
     	ImGui::Text("%s = %g", mTraces[0].mName, mTraces[0].mLastValue);
     }
 
+//    ImGui::PlotLines("PV0 stripchart", mTraces[0].mValues, IM_ARRAYSIZE(mTraces[0].mValues));
+//    ImGui::Separator();
+//    ImVec4 col = col_default_text;
+    ImVec4 col = ImColor(1.0f,0.4f,0.4f,1.0f);
+    ImGui::PushStyleColor(ImGuiCol_PlotLines, col);
+    ImGui::PlotLines("PV0 stripchart", mTraces[0].mValues, IM_ARRAYSIZE(mTraces[0].mValues), mTraces[0].mValuesIndex, mTraces[0].mName, -1.0f, 12.0f, ImVec2(0,180));
+    ImGui::PopStyleColor();
+    ImGui::Separator();
+
     if (ImGui::InputText("PV1", PV1, IM_ARRAYSIZE(PV1), ImGuiInputTextFlags_EnterReturnsTrue)) {
     	printf("PV1: %s\n", PV1);
     	SetTraceName(1, PV1);
@@ -130,7 +139,8 @@ StripRTrace::StripRTrace() :
 	mChId(0),
 	mOnceConnected(0),
 	mEvId(0),
-	mNewName(false) {
+	mNewName(false),
+	mValuesIndex(0) {
 
 }
 
@@ -157,6 +167,10 @@ void StripRTrace::EventHandler(evargs args) {
 //        unsigned base_type = args.type % (LAST_TYPE+1);
         void *val_ptr = dbr_value_ptr(args.dbr, args.type);
         mLastValue = *(dbr_double_t*) val_ptr;
+
+        mValues[mValuesIndex] = mLastValue;
+        mValuesIndex = (mValuesIndex + 1) % IM_ARRAYSIZE(mValues);
+        printf("%s current index %d\n", mName, mValuesIndex);
 
 //        sprintf(str, dblFormatStr, ((dbr_double_t*) val_ptr)[index]);
 
