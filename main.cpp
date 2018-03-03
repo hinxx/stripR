@@ -62,8 +62,8 @@ int main(int, char**)
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    StripR stripr = StripR();
     bool show_main_window = true;
+    StripRInit();
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -129,6 +129,8 @@ int main(int, char**)
         ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
     }
+
+    StripRShutdown();
 
     // Cleanup
     ImGui_ImplGlfwGL3_Shutdown();

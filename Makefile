@@ -14,6 +14,8 @@
 #CXX = g++
 #CXX = clang++
 
+export PKG_CONFIG_PATH=$$(PKG_CONFIG_PATH):/home/hinxx/git/epics-base/lib/pkgconfig
+
 EXE = stripR
 SOURCES = stripR.cpp main.cpp imgui_impl_glfw_gl3.cpp
 SOURCES += imgui/imgui.cpp imgui/imgui_demo.cpp imgui/imgui_draw.cpp
@@ -22,13 +24,14 @@ OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 
 UNAME_S := $(shell uname -s)
 
-CXXFLAGS = -I. -I./imgui -I./imgui/examples/libs/gl3w
+CXXFLAGS = -O0 -ggdb3
+CXXFLAGS += -I. -I./imgui -I./imgui/examples/libs/gl3w
 
 ifeq ($(UNAME_S), Linux) #LINUX
 	ECHO_MESSAGE = "Linux"
-	LIBS = -lGL `pkg-config --static --libs glfw3`
+	LIBS = -pthread -lGL `pkg-config --static --libs glfw3` `pkg-config --static --libs epics-base` -lca -lCom
 
-	CXXFLAGS += `pkg-config --cflags glfw3`
+	CXXFLAGS += `pkg-config --cflags glfw3` `pkg-config --cflags epics-base`
 	CXXFLAGS += -Wall -Wformat
 	CFLAGS = $(CXXFLAGS)
 endif
@@ -62,7 +65,7 @@ endif
 %.o:imgui/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-%.o:imgui/examples//libs/gl3w/GL/%.c
+%.o:imgui/examples/libs/gl3w/GL/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 all: $(EXE)
